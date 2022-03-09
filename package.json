@@ -1,10 +1,24 @@
 {
   "name": "dante-control",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "Control Dante audio devices from Node.js",
-  "main": "index.js",
+  "main": "dante.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryanmccartney/dante-control.git"
+  },
+  "keywords": [
+    "dante",
+    "control",
+    "aoip",
+    "aes67"
+  ],
+  "bugs": {
+    "url": "https://github.com/ryanmccartney/dante-control/issues"
+  },
+  "homepage": "https://github.com/ryanmccartney/dante-control#readme",
   "scripts": {
-    "dev": "nodemon index",
+    "dev": "nodemon test",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ryan McCartney",
