@@ -18,8 +18,9 @@
   },
   "homepage": "https://github.com/ryanmccartney/dante-control#readme",
   "scripts": {
-    "dev": "nodemon test",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "example-device-name": "nodemon ./examples/deviceName",
+    "example-channel-name": "nodemon ./examples/channelName",
+    "example-crosspoint": "nodemon ./examples/crosspoint"
   },
   "author": "Ryan McCartney",
   "license": "MIT",
