@@ -24,7 +24,9 @@
   "author": "Ryan McCartney",
   "license": "MIT",
   "dependencies": {
-    "multicast-dns": "^7.2.4",
-    "nodemon": "^2.0.12"
+    "multicast-dns": "^7.2.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }
