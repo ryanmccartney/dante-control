@@ -1,6 +1,6 @@
 # dante-control
 
-A simple Javascript library for controlling Audinate Dante devices.
+A simple Javascript [NPM Package](https://www.npmjs.com/package/dante-control) for controlling AES67 & dante devices.
 
 Expands on work by Chris Ritsen's [Network Audio Controller](https://github.com/chris-ritsen/network-audio-controller) library for Python.
 
@@ -18,7 +18,12 @@ And initial bash script investigations documented on [Gearspace](https://gearspa
 
 -   Get device Tx channel names
 -   Get device Rx channel names
--   Publish on NPM
+
+## Installation
+
+Get it from NPM
+
+`npm i dante-control`
 
 ## Usage
 
