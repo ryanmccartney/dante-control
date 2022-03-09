@@ -1,6 +1,6 @@
 {
   "name": "dante-control",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Control Dante audio devices from Node.js",
   "main": "dante.js",
   "repository": {
