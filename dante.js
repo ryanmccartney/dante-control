@@ -36,6 +36,7 @@ const parseTxChannelNames = (reply) => {
 
 class Dante {
     constructor() {
+        this.debug = false;
         this.devices;
         this.devicesList = [];
         this.socket = dgram.createSocket("udp4");
@@ -61,11 +62,16 @@ class Dante {
         const deviceIP = rinfo.address;
         const replySize = rinfo.size;
         const deviceData = {};
+
+        if (this.debug) {
+            // Log replies when in debug mode
+            console.log(`Rx (${reply.length}): ${reply.toString("hex")}`);
+        }
+
         if (reply[0] === danteConstant[0] && reply[1] === sequenceId1[0]) {
             if (replySize === bufferToInt(reply.slice(2, 4))) {
                 const commandId = reply.slice(6, 8);
                 deviceData[rinfo.address] = {};
-                console.log(bufferToInt(commandId));
                 switch (bufferToInt(commandId)) {
                     case 4096:
                         deviceData[rinfo.address] = parseChannelCount(reply);
@@ -76,14 +82,20 @@ class Dante {
                 }
 
                 this.devices = merge(this.devices, deviceData);
-                console.log(deviceData);
+                if (this.debug) {
+                    // Log device information when in debug mode
+                    console.log(deviceData);
+                }
             }
         }
     }
 
     sendCommand(command, host, port = danteControlPort) {
-        console.log(command);
-        console.log(command.length);
+        if (this.debug) {
+            // Log sent bytes when in debug mode
+            console.log(`Tx (${command.length}): ${command.toString("hex")}`);
+        }
+
         this.socket.send(command, 0, command.length, port, host);
     }
 
