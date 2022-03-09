@@ -22,15 +22,20 @@ const bufferToInt = (buffer) => {
 };
 
 const parseChannelCount = (reply) => {
-    const channelInfo = { txChannelCount: reply[13], rxChannelCount: reply[15] };
+    const channelInfo = { channelCount: { tx: reply[13], rx: reply[15] } };
     return channelInfo;
 };
 
 const parseTxChannelNames = (reply) => {
-    const names = { txChannelNames: [] };
-    console.log(reply);
-    console.log(reply.toString());
+    const names = { channelNames: { tx: [] } };
+    const channels = reply[13];
 
+    for (let channel in channels) {
+        console.log(reply);
+        console.log(reply.toString());
+        const name = "";
+        names.channelNames.tx.push(name);
+    }
     return names;
 };
 
@@ -41,10 +46,10 @@ class Dante {
         this.devicesList = [];
         this.socket = dgram.createSocket("udp4");
 
-        this.socket.on("message", this.parseReply);
+        this.socket.on("message", this.parseReply.bind(this));
         this.socket.bind(danteControlPort);
 
-        mdns.on("response", this.parseDevices);
+        mdns.on("response", this.parseDevices.bind(this));
     }
 
     parseDevices(response) {
@@ -71,19 +76,19 @@ class Dante {
         if (reply[0] === danteConstant[0] && reply[1] === sequenceId1[0]) {
             if (replySize === bufferToInt(reply.slice(2, 4))) {
                 const commandId = reply.slice(6, 8);
-                deviceData[rinfo.address] = {};
+                deviceData[deviceIP] = {};
                 switch (bufferToInt(commandId)) {
                     case 4096:
-                        deviceData[rinfo.address] = parseChannelCount(reply);
+                        deviceData[deviceIP] = parseChannelCount(reply);
                         break;
                     case 8208:
-                        deviceData[rinfo.address] = parseTxChannelNames(reply);
+                        deviceData[deviceIP] = parseTxChannelNames(reply);
                         break;
                 }
 
                 this.devices = merge(this.devices, deviceData);
                 if (this.debug) {
-                    // Log device information when in debug mode
+                    // Log parsed device information when in debug mode
                     console.log(deviceData);
                 }
             }
@@ -237,14 +242,18 @@ class Dante {
         this.sendCommand(commandBuffer, ipaddress);
     }
 
-    getChannelCount(ipaddress) {
+    async getChannelCount(ipaddress) {
         const commandBuffer = this.makeCommand("channelCount");
         this.sendCommand(commandBuffer, ipaddress);
+
+        return this.devices[ipaddress].channelCount;
     }
 
-    getChannelNames(ipaddress) {
+    async getChannelNames(ipaddress) {
         const commandBuffer = this.makeCommand("txChannelNames", Buffer.from("0001000100", "hex"));
         this.sendCommand(commandBuffer, ipaddress);
+
+        return this.devices[ipaddress].channelNames;
     }
 
     get devices() {
