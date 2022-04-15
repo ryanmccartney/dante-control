@@ -10,5 +10,5 @@ const channelCount = dante.getChannelCount("10.32.61.12");
 console.log(channelCount);
 
 // Get the names of Tx and Rx channels by providing the device IP address.
-const channelNames = dante.getChannelNames("10.32.61.13");
+const channelNames = dante.getChannelNames("10.32.61.12");
 console.log(channelNames);

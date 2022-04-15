@@ -20,7 +20,8 @@
   "scripts": {
     "example-device-name": "nodemon ./examples/deviceName",
     "example-channel-name": "nodemon ./examples/channelName",
-    "example-crosspoint": "nodemon ./examples/crosspoint"
+    "example-channel-names": "nodemon ./examples/channelNames",
+    "example-subscription": "nodemon ./examples/subscription"
   },
   "author": "Ryan McCartney",
   "license": "MIT",

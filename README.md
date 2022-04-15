@@ -47,14 +47,14 @@ const dante = new Dante();
 `dante.resetChannelName("192.168.0.1", "rx", 1);`
 `dante.resetChannelName("192.168.0.1", "tx", 1);`
 
-### Making a crosspoint
+### Making a subscription
 
-`dante.makeCrosspoint("192.168.0.1", "Input 1", "MyDanteDeviceName", 3);`
-`dante.makeCrosspoint("192.168.0.1", "Input 2", "MyDanteDeviceName", 4);`
+`dante.makesubscription("192.168.0.1", "Input 1", "MyDanteDeviceName", 3);`
+`dante.makesubscription("192.168.0.1", "Input 2", "MyDanteDeviceName", 4);`
 
-### Clearing a crosspoint
+### Clearing a subscription
 
-`dante.clearCrosspoint("192.168.0.113", 2);`
+`dante.clearsubscription("192.168.0.113", 2);`
 
 ### Get number of Tx and Rx channels from a device
 
