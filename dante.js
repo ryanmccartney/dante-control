@@ -7,6 +7,10 @@ const danteControlPort = 4440;
 const sequenceId1 = Buffer.from([0x29]);
 const danteConstant = Buffer.from([0x27]);
 
+function reverse(s) {
+    return s.split("").reverse().join("");
+}
+
 const getRandomInt = (max) => {
     return Math.floor(Math.random() * max);
 };
@@ -28,14 +32,21 @@ const parseChannelCount = (reply) => {
 
 const parseTxChannelNames = (reply) => {
     const names = { channelNames: { tx: [] } };
-    const channels = reply[13];
+    const namesString = reply.toString();
+    const channelsCount = reply[10];
 
-    for (let channel in channels) {
-        console.log(reply);
-        console.log(reply.toString());
-        const name = "";
-        names.channelNames.tx.push(name);
+    let name = "";
+
+    for (let i = namesString.length - 1; i > 50; i--) {
+        if (reply[i] === 0) {
+            console.log(reverse(name));
+            names.channelNames.tx.push(reverse(name));
+            name = "";
+        } else {
+            name += namesString[i];
+        }
     }
+
     return names;
 };
 
@@ -86,7 +97,7 @@ class Dante {
                         break;
                 }
 
-                this.devices = merge(this.devices, deviceData);
+                // this.devices = merge(this.devices, deviceData);
                 if (this.debug) {
                     // Log parsed device information when in debug mode
                     console.log(deviceData);
@@ -122,7 +133,7 @@ class Dante {
             case "deviceName":
                 commandId = Buffer.from("1002", "hex");
                 break;
-            case "crosspoint":
+            case "subscription":
                 commandId = Buffer.from("3010", "hex");
                 break;
             case "rxChannelNames":
@@ -210,7 +221,7 @@ class Dante {
         this.setChannelName(ipaddress, "", channelType, channelNumber);
     }
 
-    makeCrosspoint(ipaddress, sourceChannelName, sourceDeviceName, destinationChannelNumber = 0) {
+    makesubscription(ipaddress, sourceChannelName, sourceDeviceName, destinationChannelNumber = 0) {
         const sourceChannelNameBuffer = Buffer.from(sourceChannelName, "ascii");
         const sourceDeviceNameBuffer = Buffer.from(sourceDeviceName, "ascii");
 
@@ -224,12 +235,12 @@ class Dante {
             sourceDeviceNameBuffer,
         ]);
 
-        const commandBuffer = this.makeCommand("crosspoint", commandArguments);
+        const commandBuffer = this.makeCommand("subscription", commandArguments);
 
         this.sendCommand(commandBuffer, ipaddress);
     }
 
-    clearCrosspoint(ipaddress, destinationChannelNumber) {
+    clearsubscription(ipaddress, destinationChannelNumber) {
         const commandArguments = Buffer.concat([
             Buffer.from("0401", "hex"),
             intToBuffer(destinationChannelNumber),
@@ -237,23 +248,23 @@ class Dante {
             Buffer.alloc(108),
         ]);
 
-        const commandBuffer = this.makeCommand("crosspoint", commandArguments);
+        const commandBuffer = this.makeCommand("subscription", commandArguments);
 
         this.sendCommand(commandBuffer, ipaddress);
     }
 
-    async getChannelCount(ipaddress) {
+    getChannelCount(ipaddress) {
         const commandBuffer = this.makeCommand("channelCount");
         this.sendCommand(commandBuffer, ipaddress);
 
-        return this.devices[ipaddress].channelCount;
+        return this.devices[ipaddress]?.channelCount;
     }
 
-    async getChannelNames(ipaddress) {
+    getChannelNames(ipaddress) {
         const commandBuffer = this.makeCommand("txChannelNames", Buffer.from("0001000100", "hex"));
         this.sendCommand(commandBuffer, ipaddress);
 
-        return this.devices[ipaddress].channelNames;
+        return this.devices[ipaddress]?.channelNames;
     }
 
     get devices() {
